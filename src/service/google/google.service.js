@@ -3,8 +3,10 @@ import { GoogleAuthorizationImpl } from './google.authorization';
 
 require('dotenv').config();
 
-class GoogleServiceImpl {
+export class GoogleServiceImpl {
     authContext
+
+    returnedData
 
     constructor() {
         this.authContext = new GoogleAuthorizationImpl(
@@ -14,31 +16,18 @@ class GoogleServiceImpl {
         );
     }
 
-    getGoogleSheetData(msg) {
+    async getGoogleSheetData() {
         try {
-            this.authContext.authorization(auth => {
-                const sheets = google.sheets({ version: 'v4', auth });
-                sheets.spreadsheets.values.get({
-                    spreadsheetId: process.env.SHEET_ID,
-                    range: 'A1:B4',
-                },
-                (err, res) => {
-                    if (err) throw new Error(`The API returned an error: ${err}`);
-                    const rows = res.data.values.slice(1);
-
-                    if (rows.length) {
-                        const toStringData = rows.reduce((prev, curr) => `${prev + curr[0]}: ${curr[1]} \n`, '');
-                        msg.reply(toStringData);
-                        console.log('Bot has sent data');
-                        return;
-                    }
-                    console.log('No data found.');
-                });
+            const auth = await this.authContext.authorization();
+            const sheets = google.sheets({ version: 'v4', auth });
+            const check = await sheets.spreadsheets.values.get({
+                spreadsheetId: process.env.SHEET_ID,
+                range: 'A1:B4'
             });
+            return check.data.values.slice(1);
         } catch (error) {
-            return error;
+            return new Error(`The API returned an error: ${error}`);
         }
     }
 }
-
 export const GoogleService = new GoogleServiceImpl();
