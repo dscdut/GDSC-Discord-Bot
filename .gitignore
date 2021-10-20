@@ -1,5 +1,5 @@
 node_modules
 credentials.json
 .vscode
-src/enum
+src/enum/token.json
 .env
