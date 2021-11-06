@@ -1,6 +1,6 @@
 import { createServer } from 'http';
 import { ConfigService } from 'package/config/config.service';
-import { LoggerFactory } from 'package/logger';
+import { logger } from 'package/logger';
 import debug from 'debug';
 import app from '../index';
 
@@ -51,11 +51,11 @@ function onError(error) {
     // handle specific listen errors with friendly messages
     switch (error.code) {
         case 'EACCES':
-            LoggerFactory.globalLogger.error(`${bind} requires elevated privileges`);
+            logger.error(`${bind} requires elevated privileges`);
             process.exit(1);
             break;
         case 'EADDRINUSE':
-            LoggerFactory.globalLogger.error(`${bind} is already in use`);
+            logger.error(`${bind} is already in use`);
             process.exit(1);
             break;
         default:

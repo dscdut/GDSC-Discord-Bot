@@ -1,8 +1,8 @@
 import { DiscordSlideService } from 'core/discord-bot/slide/service';
-import { BOT_INTENTS } from 'core/enum/bot-config';
-import { BOT_EVENT } from 'core/enum/bot-event';
+import { BOT_INTENTS } from 'core/common/enum/bot-config';
+import { BOT_EVENT } from 'core/common/enum/bot-event';
 import { Client } from 'discord.js';
-import { LoggerFactory } from 'package/logger';
+import { logger } from 'package/logger';
 
 class DiscordConfig {
     client
@@ -13,7 +13,7 @@ class DiscordConfig {
 
     connectToDiscordBot() {
         this.client.on(BOT_EVENT.READY, () => {
-            LoggerFactory.globalLogger.info(`Logged in as ${this.client.user.username}!`);
+            logger.info(`Logged in as ${this.client.user.username}!`);
         });
         return this;
     }

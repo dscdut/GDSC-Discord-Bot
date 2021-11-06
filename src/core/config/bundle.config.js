@@ -1,7 +1,7 @@
 import * as express from 'express';
 import methodOverride from 'method-override';
 import { ConfigService } from 'package/config';
-import { LoggerFactory } from 'package/logger';
+import { logger } from 'package/logger';
 import cors from 'cors';
 import { InvalidFilter, InvalidResolver } from 'core/common/exception/system';
 import { DiscordService } from './discord.config';
@@ -10,7 +10,7 @@ export class AppBundle {
     BASE_PATH = '/api';
 
     static builder() {
-        LoggerFactory.globalLogger.info('App starts bundling!');
+        logger.info('App starts bundling!');
         return new AppBundle();
     }
 
@@ -26,7 +26,7 @@ export class AppBundle {
      * Initial the express server
      */
     init() {
-        LoggerFactory.globalLogger.info(`App is running in mode: [${ConfigService.getSingleton().get('NODE_ENV')}]`);
+        logger.info(`App is running in mode: [${ConfigService.getSingleton().get('NODE_ENV')}]`);
 
         /**
          * Setting basic
@@ -54,7 +54,7 @@ export class AppBundle {
                 return undefined;
             }),
         );
-        LoggerFactory.globalLogger.info('Building the initial-config');
+        logger.info('Building the initial-config');
         return this;
     }
 
@@ -66,7 +66,7 @@ export class AppBundle {
     applyGlobalFilter(filters) {
         filters.forEach(filter => {
             if (filter.filter) {
-                LoggerFactory.globalLogger.info(`Building global filter: [${filter.constructor.name}]`);
+                logger.info(`Building global filter: [${filter.constructor.name}]`);
                 this.app.use(filter.filter);
             } else {
                 throw new InvalidFilter(filter);
@@ -84,12 +84,12 @@ export class AppBundle {
     }
 
     runServer() {
-        LoggerFactory.globalLogger.info('App is now running');
+        logger.info('App is now running');
         return this;
     }
 
-    runDiscordService() {
-        LoggerFactory.globalLogger.info('Discord service is now running');
+    async runDiscordService() {
+        logger.info('Discord service is now running');
         DiscordService
             .connectToDiscordBot()
             .runBotService()
