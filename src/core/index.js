@@ -6,7 +6,7 @@ import { ModuleResolver } from './api';
 const app = express();
 
 (async () => {
-    await AppBundle
+    AppBundle
         .builder()
         .applyAppContext(app)
         .init()

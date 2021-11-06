@@ -1,5 +1,5 @@
 import express from 'express';
-import { LoggerFactory } from 'package/logger';
+import { logger } from 'package/logger';
 import { HttpException } from './http-exception';
 import { HttpResponse, InValidHttpResponse } from './http-response';
 
@@ -25,8 +25,8 @@ export class Module {
                 return new InValidHttpResponse(err.status, err.code, err.message)
                     .toResponse(response);
             }
-            LoggerFactory.globalLogger.error(err.message);
-            LoggerFactory.globalLogger.error(err.stack);
+            logger.error(err.message);
+            logger.error(err.stack);
             return InValidHttpResponse
                 .toInternalResponse(err.message)
                 .toResponse(response);
@@ -39,7 +39,7 @@ export class Module {
 
     addPrefix({ prefixPath = '/', module }) {
         if (!module) {
-            LoggerFactory.globalLogger.error('Module is require in addPrefix function');
+            logger.error('Module is require in addPrefix function');
         }
         this.#prefix = {
             prefixPath,
@@ -49,7 +49,7 @@ export class Module {
     }
 
     register(apis) {
-        LoggerFactory.globalLogger.info(`${this.#prefix.module} is bundling`);
+        logger.info(`${this.#prefix.module} is bundling`);
         apis.forEach(api => {
             const { route, controller, method } = api;
             this.#router[method](route, (req, res, next) => { next(); }, this.#createHandler(controller));

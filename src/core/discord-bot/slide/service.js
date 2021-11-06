@@ -1,29 +1,22 @@
 /* eslint-disable no-case-declarations */
-import { COMMAND, COMMAND_PREFIX } from 'core/enum/bot-command';
+import { COMMAND, COMMAND_PREFIX } from 'core/common/enum/bot-command';
+import { SlideService } from 'core/modules/slide';
 
 class DiscordSlideServiceImpl {
+    constructor() {
+        this.slideService = SlideService;
+    }
+
     async getDataByMessage(client, msg) {
         switch (msg.content) {
             case 'hello':
             case 'hi':
-                return this.helloCase();
+                return this.slideService.helloCase();
             case 'name?':
-                return this.nameCase(client);
+                return this.slideService.nameCase(client);
             case COMMAND_PREFIX.GET_SLIDE_PREFIX + COMMAND.GET_SLIDE:
-                return this.getSlideCase();
+                return this.slideService.getSlideCase();
         }
-    }
-
-    async helloCase() {
-        return 'get fuck off, hoe!!';
-    }
-
-    async nameCase(client) {
-        return client.user.username;
-    }
-
-    async getSlideCase() {
-        return 'slide returned, bitch';
     }
 }
 
