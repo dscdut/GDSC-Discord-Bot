@@ -9,7 +9,10 @@ const config = knexConfig[environment];
 const connection = knex(config);
 export default connection;
 
-export const getTransaction = () => connection.transaction();
+export const getTransaction = async () => {
+    const trx = await connection.transaction();
+    return trx;
+};
 
 export const connectDatabase = async () => {
     try {
