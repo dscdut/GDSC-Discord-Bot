@@ -25,13 +25,3 @@
 // });
 
 // const test =
-
-import { dbService } from './src/core/modules/knex';
-
-async function check() {
-    const data = await dbService('slides');
-    console.log('asdasdasd');
-    console.log(data);
-}
-
-check();

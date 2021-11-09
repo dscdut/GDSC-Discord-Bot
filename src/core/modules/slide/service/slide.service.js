@@ -1,18 +1,24 @@
 class SlideServiceImpl {
-    async getAll() {
-        return 'fuck off, bitch!!!';
+    async addSlide(slideInfo) {
+        if (this.#checkValidSlideTitle(slideInfo)) {
+            const slideTitle = this.#getSlideTitle(slideInfo);
+            const slideUrl = this.#getSlideUrl(slideInfo);
+            
+        } else {
+            return '[ERROR] slide\'s title must begin with character: double quote (")';
+        }
     }
 
-    async helloCase() {
-        return 'get fuck off, hoe!!';
+    #getSlideTitle(content) {
+        return content.slice(content.indexOf('"') + 1, content.lastIndexOf('"'));
     }
 
-    async nameCase(client) {
-        return client.user.username;
+    #getSlideUrl(content) {
+        return content.slice(content.lastIndexOf('"')).trim();
     }
 
-    async getSlideCase() {
-        return 'slide returned, bitch';
+    #checkValidSlideTitle(content) {
+        return content.indexOf('"') === 0;
     }
 }
 

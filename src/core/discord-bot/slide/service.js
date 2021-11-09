@@ -1,5 +1,4 @@
-/* eslint-disable no-case-declarations */
-import { COMMAND, COMMAND_PREFIX } from 'core/common/enum/bot-command';
+import { COMMAND_TYPE } from 'core/common/enum/bot-command';
 import { SlideService } from 'core/modules/slide';
 
 class DiscordSlideServiceImpl {
@@ -7,16 +6,19 @@ class DiscordSlideServiceImpl {
         this.slideService = SlideService;
     }
 
-    async getDataByMessage(client, msg) {
-        switch (msg.content) {
-            case 'hello':
-            case 'hi':
-                return this.slideService.helloCase();
-            case 'name?':
-                return this.slideService.nameCase(client);
-            case COMMAND_PREFIX.GET_SLIDE_PREFIX + COMMAND.GET_SLIDE:
-                return this.slideService.getSlideCase();
+    async actionByCommandType(message) {
+        switch (message.slice(message.indexOf('_'), message.indexOf(' '))) {
+            case COMMAND_TYPE.ADD: {
+                const insertedSlide = await this.callAddSlideService(message);
+                return insertedSlide;
+            }
         }
+    }
+
+    async callAddSlideService(message) {
+        const slideInfo = message.slice(message.indexOf(' '));
+        const insertedSlide = await this.slideService.addSlide(slideInfo.trim());
+        return insertedSlide;
     }
 }
 
