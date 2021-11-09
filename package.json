@@ -5,7 +5,8 @@
     "description": "This is a express boilerplate",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon --exec babel-node src/core/bin/www.js"
+        "dev": "nodemon --exec babel-node src/core/bin/www.js",
+        "test": "babel-node test.js"
     },
     "dependencies": {
         "@babel/runtime": "^7.15.4",
@@ -15,7 +16,9 @@
         "dotenv": "^10.0.0",
         "express": "~4.16.1",
         "http-status": "^1.5.0",
+        "knex": "^0.95.13",
         "method-override": "^3.0.0",
+        "pg": "^8.7.1",
         "winston": "^3.3.3"
     },
     "devDependencies": {

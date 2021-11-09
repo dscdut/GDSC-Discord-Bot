@@ -1,5 +1,6 @@
 import express from 'express';
 import './config/config-service.config';
+import { ConfigService } from 'package/config';
 import { AppBundle } from './config/bundle.config';
 import { ModuleResolver } from './api';
 
@@ -12,6 +13,7 @@ const app = express();
         .init()
         .applyResolver(ModuleResolver)
         .runServer()
+        .connectDatabase(ConfigService.getSingleton().get('NODE_ENV'))
         .runDiscordService();
 })();
 
