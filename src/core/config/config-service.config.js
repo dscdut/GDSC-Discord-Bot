@@ -1,4 +1,6 @@
-import { ConfigService } from 'package/config/config.service';
+// import { ConfigService } from 'package/config/config.service';
+
+import { ConfigService } from '../../package/config/config.service';
 
 let PATH_LOOKUP = `${process.cwd()}/.env`;
 

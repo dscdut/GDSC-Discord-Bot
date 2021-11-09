@@ -5,8 +5,12 @@
     "description": "This is a express boilerplate",
     "main": "index.js",
     "scripts": {
-        "lint": "eslint --fix --ext .js .",
-        "dev": "nodemon --exec babel-node src/core/bin/www.js"
+        "dev": "nodemon --exec babel-node src/core/bin/www.js",
+        "test": "babel-node test.jsnpm install -g knex",
+        "db:migrate:latest": "npx knex --esm migrate:latest",
+        "db:rollback": "npx knex --esm migrate:rollback",
+        "db:seed": "npx knex --esm seed:run",
+        "db:reset": "npx knex --esm migrate:rollback && npx knex --esm migrate:latest && npx knex --esm seed:run"
     },
     "dependencies": {
         "@babel/runtime": "^7.15.4",
@@ -16,6 +20,7 @@
         "dotenv": "^10.0.0",
         "express": "~4.16.1",
         "http-status": "^1.5.0",
+        "knex": "^0.95.13",
         "method-override": "^3.0.0",
         "pg": "^8.7.1",
         "winston": "^3.3.3"

@@ -7,7 +7,7 @@ const {
     splat, simple
 } = format;
 
-const logger = createLogger({
+export const logger = createLogger({
     level: 'info',
     // log's format is defined through combine
     format: format.json(),
@@ -35,5 +35,3 @@ const logger = createLogger({
         })
     ],
 });
-
-export { logger };
