@@ -9,6 +9,7 @@
         "node_modules"
     ],
     "include": [
-        "src/**/*"
-, "knexfile.js"    ]
+        "src/**/*", 
+        "src/core/config/knexfile.js"
+    ]
 }

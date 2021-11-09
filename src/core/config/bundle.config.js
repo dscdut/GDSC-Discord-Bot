@@ -1,17 +1,14 @@
 import * as express from 'express';
-import knex from 'knex';
 import cors from 'cors';
 import methodOverride from 'method-override';
 import { ConfigService } from 'package/config';
 import { logger } from 'package/logger';
 import { InvalidFilter, InvalidResolver } from 'core/common/exception/system';
-import { knexConfig } from 'core/modules/knex/knexfile';
+import { connectDatabase } from 'core/database';
 import { DiscordService } from './discord.config';
 
 export class AppBundle {
     BASE_PATH = '/api';
-
-    dbService
 
     static builder() {
         logger.info('App starts bundling!');
@@ -92,22 +89,9 @@ export class AppBundle {
         return this;
     }
 
-    connectToDatabase(env) {
-        const environment = env || 'development';
-        const config = knexConfig[environment];
-        this.dbService = knex(config);
-
-        this.dbService.raw('SELECT \'test connection\';')
-            .then(() => {
-                logger.info('Connected to DB');
-            }).catch(err => {
-                logger.error(err.message);
-                throw err;
-            });
-        return this;
-    }
-
     async runDiscordService() {
+        await connectDatabase();
+
         logger.info('Discord service is now running');
         DiscordService
             .connectToDiscordBot()

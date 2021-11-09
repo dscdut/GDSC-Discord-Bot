@@ -7,10 +7,11 @@
     "scripts": {
         "dev": "nodemon --exec babel-node src/core/bin/www.js",
         "test": "babel-node test.jsnpm install -g knex",
-        "db:migrate:latest": "npx knex --esm migrate:latest",
-        "db:rollback": "npx knex --esm migrate:rollback",
-        "db:seed": "npx knex --esm seed:run",
-        "db:reset": "npx knex --esm migrate:rollback && npx knex --esm migrate:latest && npx knex --esm seed:run"
+        "knex": "babel-node node_modules/.bin/knex --knexfile src/core/config/knexfile.config.js",
+        "db:migrate": "yarn knex migrate:latest",
+        "db:rollback": "yarn knex migrate:rollback",
+        "db:seed": "yarn knex seed:run",
+        "db:reset": "yarn knex migrate:rollback && yarn knex migrate:latest && yarn knex seed:run"
     },
     "dependencies": {
         "@babel/runtime": "^7.15.4",
