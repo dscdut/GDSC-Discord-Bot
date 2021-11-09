@@ -6,7 +6,11 @@
     "main": "index.js",
     "scripts": {
         "dev": "nodemon --exec babel-node src/core/bin/www.js",
-        "test": "babel-node test.js"
+        "test": "babel-node test.jsnpm install -g knex",
+        "db:migrate:latest": "npx knex --esm migrate:latest",
+        "db:rollback": "npx knex --esm migrate:rollback",
+        "db:seed": "npx knex --esm seed:run",
+        "db:reset": "npx knex --esm migrate:rollback && npx knex --esm migrate:latest && npx knex --esm seed:run"
     },
     "dependencies": {
         "@babel/runtime": "^7.15.4",

@@ -92,7 +92,7 @@ export class AppBundle {
         return this;
     }
 
-    connectDatabase(env) {
+    connectToDatabase(env) {
         const environment = env || 'development';
         const config = knexConfig[environment];
         this.dbService = knex(config);

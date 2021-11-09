@@ -1,9 +1,7 @@
-import { ConfigService } from 'package/config';
-import '../../config/config-service.config';
+import './src/core/config/config-service.config';
+import { ConfigService } from './src/package/config/config.service';
 
-require('dotenv').config();
-
-export const knexConfig = {
+module.exports = {
     development: {
         client: ConfigService.getSingleton().get('DB_TYPE'),
         connection: {
@@ -15,10 +13,10 @@ export const knexConfig = {
             charset: 'utf8'
         },
         migrations: {
-            directory: `${__dirname}/src/config/knex/migrations`,
+            directory: `${__dirname}/src/core/database/migrations`,
         },
         seeds: {
-            directory: `${__dirname}/src/config/knex/seeds`
+            directory: `${__dirname}/src/core/database/seeds`
         },
     },
 
@@ -33,10 +31,10 @@ export const knexConfig = {
             charset: 'utf8'
         },
         migrations: {
-            directory: `${__dirname}/src/config/knex/migrations`,
+            directory: `${__dirname}/src/core/database/migrations`,
         },
         seeds: {
-            directory: `${__dirname}/src/config/knex/seeds`
+            directory: `${__dirname}/src/core/database/seeds`
         }
     },
 };
