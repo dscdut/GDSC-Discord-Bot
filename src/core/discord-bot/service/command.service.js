@@ -2,19 +2,19 @@ import { COMMAND_PREFIX } from 'core/common/constant';
 import { COMMAND_OF } from 'core/common/enum/bot-command';
 import { DiscordSlideService } from '../slide/service';
 
-export class DiscordCommandService {
-    constructor(msg) {
-        this.msg = msg.content;
-        this.commandType = this.msg.slice(0, this.msg.indexOf('_'));
+class DiscordCommandServiceImpl {
+    constructor() {
         this.discordSlideService = DiscordSlideService;
     }
 
-    async actionByCommand() {
-        switch (this.commandType) {
+    actionByCommand(message) {
+        const commandType = message.slice(0, message.indexOf('_'));
+        switch (commandType) {
             case COMMAND_PREFIX + COMMAND_OF.SLIDE: {
-                const response = await this.discordSlideService.actionByCommandType(this.msg);
-                return response;
+                return this.discordSlideService.actionByCommandType(message);
             }
         }
     }
 }
+
+export const DiscordCommandService = new DiscordCommandServiceImpl();

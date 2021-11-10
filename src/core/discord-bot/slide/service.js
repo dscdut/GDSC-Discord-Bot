@@ -6,19 +6,13 @@ class DiscordSlideServiceImpl {
         this.slideService = SlideService;
     }
 
-    async actionByCommandType(message) {
+    actionByCommandType(message) {
         switch (message.slice(message.indexOf('_'), message.indexOf(' '))) {
             case COMMAND_TYPE.ADD: {
-                const insertedSlide = await this.callAddSlideService(message);
-                return insertedSlide;
+                const slideInfo = message.slice(message.indexOf(' ')).trim();
+                return this.slideService.addSlide(slideInfo);
             }
         }
-    }
-
-    async callAddSlideService(message) {
-        const slideInfo = message.slice(message.indexOf(' '));
-        const insertedSlide = await this.slideService.addSlide(slideInfo.trim());
-        return insertedSlide;
     }
 }
 
