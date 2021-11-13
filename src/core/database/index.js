@@ -7,6 +7,7 @@ const environment = ConfigService.getSingleton().get('NODE_ENV') || 'development
 const config = knexConfig[environment];
 
 const connection = knex(config);
+
 export default connection;
 
 export const getTransaction = () => connection.transaction();

@@ -1,1 +1,1 @@
-export * from './service/slide.service';
+export * from './slide.service';

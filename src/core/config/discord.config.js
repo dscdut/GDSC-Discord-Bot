@@ -1,8 +1,8 @@
-import { DiscordSlideService } from 'core/discord-bot/slide/service';
 import { BOT_INTENTS } from 'core/common/enum/bot-config';
 import { BOT_EVENT } from 'core/common/enum/bot-event';
 import { Client } from 'discord.js';
 import { logger } from 'package/logger';
+import { DiscordCommandService } from 'core/discord-bot/service/command.service';
 
 class DiscordConfig {
     client
@@ -19,9 +19,9 @@ class DiscordConfig {
     }
 
     runBotService() {
-        this.client.on(BOT_EVENT.MESSAGE_CREATE, async msg => {
-            const data = await DiscordSlideService.getDataByMessage(this.client, msg);
-            if (data) msg.reply(data);
+        this.client.on(BOT_EVENT.MESSAGE_CREATE, async message => {
+            const data = await DiscordCommandService.actionByCommand(message.content);
+            if (data) message.reply(data);
         });
         return this;
     }

@@ -1,27 +1,27 @@
 const sampleSlidesData = [
     {
-        slide_title: 'tensor flow training',
-        slide_url: 'https://www.tensorflow.org/api_docs/python/tf'
+        title: 'tensor flow training',
+        url: 'https://www.tensorflow.org/api_docs/python/tf'
     },
     {
-        slide_title: 'git training',
-        slide_url: 'https://learngitbranching.js.org/?locale=vi'
+        title: 'git training',
+        url: 'https://learngitbranching.js.org/?locale=vi'
     },
     {
-        slide_title: 'info session',
-        slide_url: 'https://google.dscdut.com/event/info-session'
+        title: 'info session',
+        url: 'https://google.dscdut.com/event/info-session'
     },
     {
-        slide_title: 'dsc-dut',
-        slide_url: 'https://www.dscdut.com/'
+        title: 'dsc-dut',
+        url: 'https://www.dscdut.com/'
     },
     {
-        slide_title: 'huy dep trai',
-        slide_url: 'https://www.facebook.com/nhenh.snl/'
+        title: 'huy dep trai',
+        url: 'https://www.facebook.com/nhenh.snl/'
     },
     {
-        slide_title: 'uniGo Co,.Ltd',
-        slide_url: 'https://unigo.pro/'
+        title: 'uniGo Co,.Ltd',
+        url: 'https://unigo.pro/'
     },
 ];
 
