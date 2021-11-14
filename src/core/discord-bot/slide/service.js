@@ -6,14 +6,24 @@ class DiscordSlideServiceImpl {
         this.slideService = SlideService;
     }
 
-    actionByCommandType(message) {
-        switch (message.slice(message.indexOf('_'), message.indexOf(' '))) {
+    executeByCommandType(req) {
+        const message = req.content;
+        const commandType = this.#getMessageCommand(message);
+        switch (commandType) {
             case COMMAND_TYPE.ADD: {
-                const slideInfo = message.slice(message.indexOf(' ')).trim();
+                const slideInfo = this.#getMessageContent(message);
                 return this.slideService.addSlide(slideInfo);
+            }
+            case COMMAND_TYPE.GET: {
+                const slideTitle = this.#getMessageContent(message);
+                return this.slideService.getSlideBySameAsTitle(slideTitle);
             }
         }
     }
+
+    #getMessageCommand = message => message.slice(message.indexOf('_'), message.indexOf(' '))
+
+    #getMessageContent = message => message.slice(message.indexOf(' ')).trim()
 }
 
 export const DiscordSlideService = new DiscordSlideServiceImpl();

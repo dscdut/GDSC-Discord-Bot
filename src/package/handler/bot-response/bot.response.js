@@ -4,17 +4,35 @@ function formatResponseText(content) {
     return `\`\`\`${content}\`\`\` `;
 }
 
-export function successResponse(message) {
+export function successResponse(message, data) {
     const response = `[${BOT_RESPONSE_STATUS.SUCCESS}] | ${message}`;
-    return formatResponseText(response);
+    if (data) {
+        return {
+            status: formatResponseText(response),
+            data
+        };
+    }
+    return { status: formatResponseText(response) };
 }
 
-export function failResponse(message) {
+export function failResponse(message, data) {
     const response = `[${BOT_RESPONSE_STATUS.FAIL}] | ${message}`;
-    return formatResponseText(response);
+    if (data) {
+        return {
+            status: formatResponseText(response),
+            data
+        };
+    }
+    return { status: formatResponseText(response) };
 }
 
-export function errorResponse(message) {
+export function errorResponse(message, data) {
     const response = `[${BOT_RESPONSE_STATUS.ERROR}] | ${message}`;
-    return formatResponseText(response);
+    if (data) {
+        return {
+            status: formatResponseText(response),
+            data
+        };
+    }
+    return { status: formatResponseText(response) };
 }
