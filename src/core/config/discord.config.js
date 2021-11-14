@@ -19,9 +19,19 @@ class DiscordConfig {
     }
 
     runBotService() {
-        this.client.on(BOT_EVENT.MESSAGE_CREATE, async message => {
-            const data = await DiscordCommandService.actionByCommand(message.content);
-            if (data) message.reply(data);
+        this.client.on(BOT_EVENT.MESSAGE_CREATE, async req => {
+            if (req.author.bot) {
+                return;
+            }
+            const res = await DiscordCommandService.executeRequest(req);
+            if (res) {
+                if (res.data) {
+                    req.reply(res.status);
+                    req.reply(res.data);
+                } else {
+                    req.reply(res.status);
+                }
+            }
         });
         return this;
     }

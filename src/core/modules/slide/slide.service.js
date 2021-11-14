@@ -1,3 +1,5 @@
+import fetch from 'node-fetch';
+import { ConfigService } from 'package/config';
 import { errorResponse, failResponse, successResponse } from 'package/handler/bot-response';
 import { logger } from 'package/logger';
 import { SlideRepository } from './slide.repository';
@@ -12,10 +14,10 @@ class SlideServiceImpl {
             const slideTitle = this.#getSlideTitle(slideInfo);
             const slideUrl = this.#getSlideUrl(slideInfo);
 
-            const mapToModel = {
-                title: slideTitle,
-                url: slideUrl
-            };
+            if (await this.#checkIfExisted(slideTitle)) {
+                return failResponse('Slide title already existed! please choose another title');
+            }
+            const mapToModel = await this.#mapToModel(slideTitle, slideUrl);
 
             try {
                 const insertedSlide = await this.slideRepository.insert(mapToModel, 'title');
@@ -29,6 +31,24 @@ class SlideServiceImpl {
         }
     }
 
+    async getSlideSameAsTitle(slideTitle) {
+        if (this.#checkValidSlideTitle(slideTitle)) {
+            const title = this.#getSlideTitle(slideTitle);
+            const slides = await this.slideRepository.getSameAsTitle(title);
+
+            if (slides.length <= 0) {
+                return failResponse(`No slide was found with title: ${title}`);
+            }
+            return successResponse('Here are what I found:', this.#toBotRespondFormat(slides));
+        }
+
+        return errorResponse('Slide\'s title must begin with character double quote (")');
+    }
+
+    #checkValidSlideTitle(content) {
+        return content.indexOf('"') === 0;
+    }
+
     #getSlideTitle(content) {
         return content.slice(content.indexOf('"') + 1, content.lastIndexOf('"')).trim();
     }
@@ -37,8 +57,40 @@ class SlideServiceImpl {
         return content.slice(content.lastIndexOf('"') + 1).trim();
     }
 
-    #checkValidSlideTitle(content) {
-        return content.indexOf('"') === 0;
+    async #mapToModel(slideTitle, slideUrl) {
+        const shortenToolBody = {
+            url: slideUrl,
+            slug: slideTitle.replaceAll(' ', '_')
+        };
+
+        const shortenToolRes = await fetch(ConfigService.getSingleton().get('SHORTEN_TOOL_API'), {
+            method: 'POST',
+            body: JSON.stringify(shortenToolBody),
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(res => res.json())
+            .catch(err => logger.error(err));
+
+        return {
+            title: slideTitle,
+            url: ConfigService.getSingleton().get('SHORTEN_TOOL_URL') + shortenToolRes.data
+        };
+    }
+
+    #toBotRespondFormat(slides) {
+        let stringResponse = `\n> ${slides[0].title} : <${slides[0].url}>`;
+
+        for (let i = 1; i < slides.length - 1; i += 1) {
+            stringResponse = stringResponse.concat('\n> ', `${slides[i].title}:  <${slides[i].url}> `);
+        }
+
+        return stringResponse;
+    }
+
+    async #checkIfExisted(slideTitle) {
+        const slide = await this.slideRepository.getByTitle(slideTitle);
+        if (slide.length > 0) return true;
+        return false;
     }
 }
 

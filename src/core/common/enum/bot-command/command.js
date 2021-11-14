@@ -3,5 +3,6 @@ export const COMMAND_OF = {
 };
 
 export const COMMAND_TYPE = {
-    ADD: '_add'
+    ADD: '_add',
+    GET: '_get'
 };

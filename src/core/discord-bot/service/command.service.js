@@ -7,14 +7,16 @@ class DiscordCommandServiceImpl {
         this.discordSlideService = DiscordSlideService;
     }
 
-    actionByCommand(message) {
-        const commandType = message.slice(0, message.indexOf('_'));
+    executeRequest(req) {
+        const commandType = this.#getCommandType(req.content);
         switch (commandType) {
             case COMMAND_PREFIX + COMMAND_OF.SLIDE: {
-                return this.discordSlideService.actionByCommandType(message);
+                return this.discordSlideService.executeByCommandType(req);
             }
         }
     }
+
+    #getCommandType = message => message.slice(0, message.indexOf('_'));
 }
 
 export const DiscordCommandService = new DiscordCommandServiceImpl();
