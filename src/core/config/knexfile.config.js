@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import fs from 'fs';
 
 dotenv.config({ path: `${__dirname}/../../../.env` });
 
@@ -30,6 +31,11 @@ module.exports = {
             password: process.env.DB_PASS,
             database: `${process.env.DB_NAME}_staging`,
             charset: 'utf8',
+            ssl: {
+                require: true,
+                rejectUnauthorized: false,
+                ca: fs.readFileSync(`${process.cwd()}/ca-certificate.crt`)
+            },
         },
         migrations: {
             directory: `${__dirname}/../database/migrations`,
