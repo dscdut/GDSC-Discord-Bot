@@ -1,8 +1,7 @@
-import fetch from 'node-fetch';
-import { ConfigService } from 'package/config';
 import { errorResponse, failResponse, successResponse } from 'package/handler/bot-response';
 import { logger } from 'package/logger';
 import { SlideRepository } from './slide.repository';
+import { SlideRequestProcess } from './slide.request-process';
 
 class SlideServiceImpl {
     constructor() {
@@ -10,15 +9,14 @@ class SlideServiceImpl {
     }
 
     async addSlide(slideInfo) {
-        if (this.#checkValidSlideTitle(slideInfo)) {
-            const slideTitle = this.#getSlideTitle(slideInfo);
-            const slideUrl = this.#getSlideUrl(slideInfo);
+        const mapToModel = await new SlideRequestProcess(slideInfo)
+            .checkValidUrl()
+            .getSlideInfo();
 
-            if (await this.#checkIfExisted(slideTitle)) {
+        if (mapToModel) {
+            if (await this.#checkIfExisted(mapToModel.title)) {
                 return failResponse('Slide title already existed! please choose another title');
             }
-            const mapToModel = await this.#mapToModel(slideTitle, slideUrl);
-
             try {
                 const insertedSlide = await this.slideRepository.insert(mapToModel, 'title');
                 return successResponse(`Slide: "${insertedSlide[0]}" - successfully added!`);
@@ -26,64 +24,24 @@ class SlideServiceImpl {
                 logger.error(`Error with adding slide: ${error.detail}`);
                 return failResponse(error.detail);
             }
-        } else {
-            return errorResponse('Slide\'s title must begin with character double quote (")');
-        }
+        } else return errorResponse('Invalid command format, make sure slide\'s url must be like: https://<your slide url>');
     }
 
     async getSlideBySameAsTitle(slideTitle) {
-        if (this.#checkValidSlideTitle(slideTitle)) {
-            const title = this.#getSlideTitle(slideTitle);
-            const slides = await this.slideRepository.getBySameAsTitle(title);
+        const slides = await this.slideRepository.getBySameAsTitle(slideTitle);
 
-            if (slides.length <= 0) {
-                return failResponse(`No slide was found with title: ${title}`);
-            }
-            return successResponse('Here are what I found:', this.#toBotRespondFormat(slides));
+        if (slides.length <= 0) {
+            return failResponse(`No slide was found with title: ${slideTitle}`);
         }
-
-        return errorResponse('Slide\'s title must begin with character double quote (")');
-    }
-
-    #checkValidSlideTitle(content) {
-        return content.indexOf('"') === 0;
-    }
-
-    #getSlideTitle(content) {
-        return content.slice(content.indexOf('"') + 1, content.lastIndexOf('"')).trim();
-    }
-
-    #getSlideUrl(content) {
-        return content.slice(content.lastIndexOf('"') + 1).trim();
-    }
-
-    async #mapToModel(slideTitle, slideUrl) {
-        const shortenToolBody = {
-            url: slideUrl,
-            slug: slideTitle.replaceAll(' ', '_')
-        };
-
-        const shortenToolRes = await fetch(ConfigService.getSingleton().get('SHORTEN_TOOL_API'), {
-            method: 'POST',
-            body: JSON.stringify(shortenToolBody),
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(res => res.json())
-            .catch(err => logger.error(err));
-
-        return {
-            title: slideTitle,
-            url: ConfigService.getSingleton().get('SHORTEN_TOOL_URL') + shortenToolRes.data
-        };
+        return successResponse('Here are what I found:', this.#toBotRespondFormat(slides));
     }
 
     #toBotRespondFormat(slides) {
         let stringResponse = `\n> ${slides[0].title} : <${slides[0].url}>`;
 
-        for (let i = 1; i < slides.length - 1; i += 1) {
+        for (let i = 1; i <= slides.length - 1; i += 1) {
             stringResponse = stringResponse.concat('\n> ', `${slides[i].title}:  <${slides[i].url}> `);
         }
-
         return stringResponse;
     }
 
