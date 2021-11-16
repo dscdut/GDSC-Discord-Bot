@@ -11,7 +11,7 @@ class DiscordCommandServiceImpl {
         const commandType = this.#getCommandType(req.content);
         switch (commandType) {
             case COMMAND_PREFIX + COMMAND_OF.SLIDE: {
-                return this.discordSlideService.executeByCommandType(req);
+                return this.discordSlideService.executeByCommandType(req.content.replace(commandType, ''));
             }
         }
     }
