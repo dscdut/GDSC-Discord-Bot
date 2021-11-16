@@ -4,29 +4,28 @@ import { checkIfValidCommand } from './warehouse.middleware';
 import { WarehouseRepository } from './warehouse.repository';
 import { WarehouseRequestProcess } from './warehouse.request-process';
 
-class WarehouseServiceImpl {
+export class WarehouseServiceImpl {
     constructor() {
         this.warehouseRepository = WarehouseRepository;
     }
 
     async add(content) {
-        console.log('checkecekcekc');
         if (checkIfValidCommand(content)) {
             const mapToModel = await new WarehouseRequestProcess(content)
                 .getTitle()
                 .getValue()
                 .then(val => val.getDataFromContent());
 
-            // if (await this.#checkIfExisted(mapToModel.title)) {
-            //     return failResponse('Title already existed! please choose another one');
-            // }
-            // try {
-            //     const insertedData = await this.warehouseRepository.insert(mapToModel, 'title');
-            //     return successResponse(`Successfully added: "${insertedData[0]}"`);
-            // } catch (error) {
-            //     logger.error(`Error with adding record: ${error.detail}`);
-            //     return failResponse(error.detail);
-            // }
+            if (await this.#checkIfExisted(mapToModel.title)) {
+                return failResponse('Title already existed! please choose another one');
+            }
+            try {
+                const insertedData = await this.warehouseRepository.insert(mapToModel, 'title');
+                return successResponse(`Successfully added: "${insertedData[0]}"`);
+            } catch (error) {
+                logger.error(`Error with adding record: ${error.detail}`);
+                return failResponse(error.detail);
+            }
         } else return errorResponse('Invalid command format');
     }
 

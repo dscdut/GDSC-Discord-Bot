@@ -1,7 +1,6 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable prefer-destructuring */
 import { TITLE_VALUE_SEPARATOR } from 'core/common/constant';
-import { messageInstance } from 'core/discord-bot/service/command.service';
 import fetch from 'node-fetch';
 import { ConfigService } from 'package/config';
 import { logger } from 'package/logger';
@@ -32,7 +31,6 @@ export class WarehouseRequestProcess {
 
     static checkIfUrl(value) {
         // eslint-disable-next-line no-useless-escape
-        messageInstance.reply('Your content is an URL, gimme few seconds to shorten it');
         const urlExpression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
         const regex = new RegExp(urlExpression);
         return regex.test(value);
