@@ -29,20 +29,20 @@ export class WarehouseServiceImpl {
         } else return errorResponse('Invalid command format');
     }
 
-    async getSlideBySameAsTitle(slideTitle) {
-        const slides = await this.warehouseRepository.getBySameAsTitle(slideTitle);
+    async getBySameAsTitle(title) {
+        const responses = await this.warehouseRepository.getBySameAsTitle(title);
 
-        if (slides.length <= 0) {
-            return failResponse(`No slide was found with title: ${slideTitle}`);
+        if (responses.length <= 0) {
+            return failResponse(`No record was found with title: ${title}`);
         }
-        return successResponse('Here are what I found:', this.#toBotRespondFormat(slides));
+        return successResponse('Here are what I found:', this.#toBotRespondFormat(responses));
     }
 
     #toBotRespondFormat(slides) {
-        let stringResponse = `\n> ${slides[0].title} : <${slides[0].url}>`;
+        let stringResponse = '';
 
-        for (let i = 1; i <= slides.length - 1; i += 1) {
-            stringResponse = stringResponse.concat('\n> ', `${slides[i].title}:  <${slides[i].url}> `);
+        for (let i = 0; i <= slides.length - 1; i += 1) {
+            stringResponse = stringResponse.concat('\n> ', `${slides[i].title}:  ${slides[i].value}`);
         }
         return stringResponse;
     }

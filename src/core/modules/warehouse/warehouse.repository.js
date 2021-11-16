@@ -2,7 +2,7 @@ import { BaseRepository } from 'package/repository';
 
 class WarehouseRepositoryImpl extends BaseRepository {
     getBySameAsTitle(title) {
-        return this.query().select('title', 'url').where('title', 'like', `%${title}%`);
+        return this.query().select('title', 'value').where('title', 'like', `%${title}%`);
     }
 
     getByTitle(title) {

@@ -47,7 +47,8 @@ export class WarehouseRequestProcess {
         const valueFromContent = this.content.slice(indexOfTitleValueSeparator + TITLE_VALUE_SEPARATOR.length).trim();
 
         if (WarehouseRequestProcess.checkIfUrl(valueFromContent)) {
-            this.value = await WarehouseRequestProcess.shortenUrl(valueFromContent);
+            const shortedUrl = await WarehouseRequestProcess.shortenUrl(valueFromContent);
+            this.value = `<${shortedUrl}>`;
         } else this.value = valueFromContent;
 
         return this;
