@@ -1,13 +1,13 @@
 import { BaseRepository } from 'package/repository';
 
-class SlideRepositoryImpl extends BaseRepository {
+class WarehouseRepositoryImpl extends BaseRepository {
     getBySameAsTitle(title) {
         return this.query().select('title', 'url').where('title', 'like', `%${title}%`);
     }
 
     getByTitle(title) {
-        return this.query().select('title', 'url').where({ title });
+        return this.query().select('title', 'value').where({ title });
     }
 }
 
-export const SlideRepository = new SlideRepositoryImpl('slides');
+export const WarehouseRepository = new WarehouseRepositoryImpl('warehouse');
