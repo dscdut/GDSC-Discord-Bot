@@ -1,22 +1,23 @@
 import { COMMAND_PREFIX } from 'core/common/constant';
-import { COMMAND_OF } from 'core/common/enum/bot-command';
-import { DiscordSlideService } from '../slide/service';
+import { COMMAND_KEY } from 'core/common/enum/bot-command';
+import { WarehouseService } from 'core/modules/warehouse';
 
-class DiscordCommandServiceImpl {
+export class DiscordCommandServiceImpl {
     constructor() {
-        this.discordSlideService = DiscordSlideService;
+        this.warehouseService = WarehouseService;
     }
 
     executeRequest(req) {
-        const commandType = this.#getCommandType(req.content);
-        switch (commandType) {
-            case COMMAND_PREFIX + COMMAND_OF.SLIDE: {
-                return this.discordSlideService.executeByCommandType(req);
+        const commandKey = this.#getCommandKey(req.content);
+        switch (commandKey) {
+            case COMMAND_PREFIX + COMMAND_KEY.ADD: {
+                return WarehouseService.add(req.content.replace(commandKey, '').trim());
+            }
+            case COMMAND_PREFIX + COMMAND_KEY.GET: {
+                return WarehouseService.getBySameAsTitle(req.content.replace(commandKey, '').trim());
             }
         }
     }
 
-    #getCommandType = message => message.slice(0, message.indexOf('_'));
+    #getCommandKey = message => message.slice(0, message.indexOf(' '));
 }
-
-export const DiscordCommandService = new DiscordCommandServiceImpl();

@@ -1,4 +1,4 @@
-import { SlideService } from 'core/modules/slide';
+import { SlideService } from 'core/modules/warehouse';
 import { ValidHttpResponse } from 'package/handler/http-response';
 
 class Controller {
