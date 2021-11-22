@@ -1,5 +1,5 @@
 import { COMMAND_TYPE } from 'core/common/enum/bot-command';
-import { SlideService } from 'core/modules/slide';
+import { SlideService } from 'core/modules/warehouse';
 
 class DiscordSlideServiceImpl {
     constructor() {

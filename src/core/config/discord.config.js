@@ -2,7 +2,7 @@ import { BOT_INTENTS } from 'core/common/enum/bot-config';
 import { BOT_EVENT } from 'core/common/enum/bot-event';
 import { Client } from 'discord.js';
 import { logger } from 'package/logger';
-import { DiscordCommandService } from 'core/discord-bot/service/command.service';
+import { DiscordCommandServiceImpl } from 'core/discord-bot/service/command.service';
 
 class DiscordConfig {
     client
@@ -23,7 +23,7 @@ class DiscordConfig {
             if (req.author.bot) {
                 return;
             }
-            const res = await DiscordCommandService.executeRequest(req);
+            const res = await new DiscordCommandServiceImpl().executeRequest(req);
             if (res) {
                 req.reply(res.status);
                 if (res.data) {
