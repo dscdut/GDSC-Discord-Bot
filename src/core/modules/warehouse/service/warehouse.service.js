@@ -1,10 +1,10 @@
 import { errorResponse, failResponse, successResponse } from 'package/handler/bot-response';
 import { logger } from 'package/logger';
-import { checkIfValidCommand } from './warehouse.middleware';
-import { WarehouseRepository } from './warehouse.repository';
+import { checkIfValidCommand } from '../warehouse.middleware';
+import { WarehouseRepository } from '../warehouse.repository';
 import { WarehouseRequestProcess } from './warehouse.request-process';
 
-export class WarehouseServiceImpl {
+class WarehouseServiceImpl {
     constructor() {
         this.warehouseRepository = WarehouseRepository;
     }
