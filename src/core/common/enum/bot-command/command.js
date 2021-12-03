@@ -1,4 +1,5 @@
 export const COMMAND_KEY = {
     ADD: 'add',
-    GET: 'get'
+    GET: 'get',
+    GIVE_AWAY: 'giveaway',
 };
