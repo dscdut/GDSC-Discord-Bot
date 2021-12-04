@@ -5,7 +5,6 @@ import { ScheudleService } from 'core/modules/give-away/give-away.schedule';
 import { DiscordService } from 'core/config/discord.config';
 
 class GiveAwayServiceImpl {
-
     constructor() {}
 
     async addGiveAway(content, messageId, channelId) {

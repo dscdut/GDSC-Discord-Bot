@@ -2,7 +2,7 @@ import { COMMAND_PREFIX } from 'core/common/constant';
 import { COMMAND_KEY } from 'core/common/enum/bot-command';
 import { WarehouseService } from 'core/modules/warehouse';
 import { GiveAwayService } from 'core/modules/give-away';
-import{ DiscordService } from 'core/config/discord.config';
+import { DiscordService } from 'core/config/discord.config';
 
 export class DiscordCommandServiceImpl {
     constructor() {

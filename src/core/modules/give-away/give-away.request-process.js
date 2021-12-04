@@ -2,7 +2,6 @@ import { TITLE_VALUE_SEPARATOR, DATE_FORMAT, DEFAULT_TIME } from 'core/common/co
 import moment from 'moment';
 
 export class GiveAwayRequestProcess {
-
     constructor(content) {
         this.content = content;
     }
@@ -45,5 +44,4 @@ export class GiveAwayRequestProcess {
         if (dateWithFormat - now < 0) return null;
         return dateWithFormat;
     }
-
 }
