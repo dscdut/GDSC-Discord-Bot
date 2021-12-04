@@ -1,1 +1,2 @@
-export * from './warehouse.service';
+export * from './service/warehouse.service';
+export * from './warehouse.info';
