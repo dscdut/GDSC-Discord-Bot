@@ -1,5 +1,6 @@
 import { COMMAND_PREFIX } from 'core/common/constant';
 import { COMMAND_KEY } from 'core/common/enum/bot-command';
+import { BotHelp } from 'core/modules/bot-help/service/bot-help.service';
 import { WarehouseService } from 'core/modules/warehouse';
 import { GiveAwayService } from 'core/modules/give-away';
 import { DiscordService } from 'core/config/discord.config';
@@ -18,6 +19,9 @@ export class DiscordCommandServiceImpl {
             case COMMAND_PREFIX + COMMAND_KEY.GET: {
                 return WarehouseService.getBySameAsTitle(req.content.replace(commandKey, '').trim());
             }
+            case COMMAND_PREFIX + COMMAND_KEY.HELP: {
+                return BotHelp.help();
+            }
             case COMMAND_PREFIX + COMMAND_KEY.GIVE_AWAY: {
                 return GiveAwayService.addGiveAway(
                     req.content.replace(commandKey + ':', '').trim(), 
@@ -30,8 +34,12 @@ export class DiscordCommandServiceImpl {
     }
 
     #getCommandKey = (message) => {
-        message = message.slice(0, message.indexOf(' '));
-        message = message.indexOf(':') > 0 ? message.slice(0, message.indexOf(':')) : message;
+        if (message.indexOf(' ') !== -1) {
+            message = message.slice(0, message.indexOf(' '));
+        }
+        if (message.indexOf(':') !== -1) {
+            message = message.slice(0, message.indexOf(':'));
+        }
         return message;
     };
 }

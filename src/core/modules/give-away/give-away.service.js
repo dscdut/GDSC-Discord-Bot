@@ -11,10 +11,10 @@ class GiveAwayServiceImpl {
         const giveAwayCommandProcess = new GiveAwayRequestProcess(content);
         const data = giveAwayCommandProcess.seperateData();
         if (!data) {
-            return failResponse(`Invalid command! Time cannot be set to the past & Quantity must be a positive number`);
+            return failResponse('Failed', 'Invalid command! Time cannot be set to the past & Quantity must be a positive number');
         }
         ScheudleService.scheduleJob(channelId, messageId, data, DiscordService.client);
-        return successResponse(`Successfully setup give-away event [${data.message} - Time to roll: ${data.date.toLocaleString()}]`);
+        return successResponse('Successfully setup give-away event', `[${data.message} - Time to roll: ${data.date.toLocaleString()}]`);
     }
 }
 
