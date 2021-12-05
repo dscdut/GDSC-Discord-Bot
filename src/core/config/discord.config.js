@@ -25,7 +25,7 @@ class DiscordConfig {
             }
             const res = await new DiscordCommandServiceImpl().executeRequest(req);
             if (res) {
-                req.reply(res.status);
+                if (res.MESSAGE_CREATE) req.reply(res.status);
                 if (res.data) {
                     req.reply(res.data);
                 }
