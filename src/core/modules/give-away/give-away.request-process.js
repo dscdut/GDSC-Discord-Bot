@@ -7,12 +7,12 @@ export class GiveAwayRequestProcess {
     }
 
     seperateData() {
-        let arr = this.content.split(TITLE_VALUE_SEPARATOR).map(e => e.trim());
+        const arr = this.content.split(TITLE_VALUE_SEPARATOR).map(e => e.trim());
         if (arr.length < 3) return null;
-        let quantity = arr[0];
-        let date = this.formatDate(arr[1]);
-        let dateFormatted = this.validateDate(date);
-        let message = arr[2];
+        const quantity = arr[0];
+        const date = this.formatDate(arr[1]);
+        const dateFormatted = this.validateDate(date);
+        const message = arr[2];
         if (!dateFormatted || !this.validateQuantity(quantity)) {
             return null;
         }
@@ -32,7 +32,7 @@ export class GiveAwayRequestProcess {
     }
 
     validateQuantity(quantity) {
-        let number = parseInt(quantity);
+        const number = parseInt(quantity);
         if (Number.isNaN(number)) return false;
         return number > 0;
     }

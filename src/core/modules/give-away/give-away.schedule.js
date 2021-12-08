@@ -63,7 +63,7 @@ class CronJobServiceImpl {
             second: 0,
             minute: time.minute(),
             hour: time.hour(),
-            day: time.day(),
+            date: time.date(),
             month: time.month(),
         };
 
