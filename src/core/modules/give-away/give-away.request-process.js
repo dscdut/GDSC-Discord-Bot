@@ -1,4 +1,4 @@
-import { TITLE_VALUE_SEPARATOR, DATE_FORMAT, DEFAULT_TIME } from 'core/common/constant';
+import { TITLE_VALUE_SEPARATOR, DATE_FORMAT, DEFAULT_SCHEDULE_TIME } from 'core/common/constant';
 import moment from 'moment';
 
 export class GiveAwayRequestProcess {
@@ -7,12 +7,12 @@ export class GiveAwayRequestProcess {
     }
 
     seperateData() {
-        const arr = this.content.split(TITLE_VALUE_SEPARATOR).map(e => e.trim());
-        if (arr.length < 3) return null;
-        const quantity = arr[0];
-        const date = this.formatDate(arr[1]);
+        const commandInfo = this.content.split(TITLE_VALUE_SEPARATOR).map(e => e.trim());
+        if (commandInfo.length < 3) return null;
+        const quantity = commandInfo[0];
+        const date = this.formatDate(commandInfo[1]);
         const dateFormatted = this.validateDate(date);
-        const message = arr[2];
+        const message = commandInfo[2];
         if (!dateFormatted || !this.validateQuantity(quantity)) {
             return null;
         }
@@ -26,7 +26,7 @@ export class GiveAwayRequestProcess {
     formatDate(date) {
         let dateDetail = date.split(' ');
         if (dateDetail.length == 1) {
-            dateDetail = [DEFAULT_TIME, ...dateDetail];
+            dateDetail = [DEFAULT_SCHEDULE_TIME, ...dateDetail];
         }
         return dateDetail;
     }
@@ -38,10 +38,9 @@ export class GiveAwayRequestProcess {
     }
 
     validateDate(date) {
-        const dateWithFormat = moment(date, DATE_FORMAT);
+        const formattedDate = moment(date, DATE_FORMAT);
         const now = moment(new Date());
-        if (!dateWithFormat.isValid()) return null;
-        if (dateWithFormat - now < 0) return null;
-        return dateWithFormat;
+        if (!formattedDate.isValid() || (formattedDate - now < 0)) return null;
+        return formattedDate;
     }
 }

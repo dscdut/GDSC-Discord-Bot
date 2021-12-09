@@ -19,6 +19,9 @@ export class DiscordCommandServiceImpl {
             case COMMAND_PREFIX + COMMAND_KEY.GET: {
                 return WarehouseService.getBySameAsTitle(req.content.replace(commandKey, '').trim());
             }
+            case COMMAND_PREFIX + COMMAND_KEY.GET_ALL: {
+                return WarehouseService.getAll();
+            }
             case COMMAND_PREFIX + COMMAND_KEY.HELP: {
                 return BotHelp.help();
             }

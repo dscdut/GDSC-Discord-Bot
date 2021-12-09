@@ -20,17 +20,17 @@ class CronJobServiceImpl {
             return;
         }
         let currentIndex = 0;
-        let timeStamp = 0;
+        let timeCounter = 0;
         const timer = setInterval(() => {
-            if (timeStamp % 2 == 1) {
+            if (timeCounter % 2 == 1) {
                 this.channel.send("⌛");
             } else {
-                this.channel.send("⏳");
+                this.channel.send("⌛");
             }
-            timeStamp += 1;
-            if (timeStamp == 3) {
-                this.message.reply(`Congrats: <@${luckyUsers[currentIndex++]}> winning the prize 🤠🦾🦾 !!!`);
-                timeStamp = 0;
+            timeCounter += 1;
+            if (timeCounter == 3) {
+                this.message.reply(`Congrats: <@${luckyUsers[currentIndex++]}> winning the prize 🤩 🤩 🤩 !!!`);
+                timeCounter = 0;
             }
             if (currentIndex >= luckyUsers.length) {
                 clearInterval(timer);

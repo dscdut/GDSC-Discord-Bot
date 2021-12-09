@@ -1,2 +1,2 @@
 export * from './command.constant';
-export * from './date.constant';
+export * from './give-away.constant';

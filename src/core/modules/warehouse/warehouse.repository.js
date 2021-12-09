@@ -1,8 +1,8 @@
 import { BaseRepository } from 'package/repository';
 
 class WarehouseRepositoryImpl extends BaseRepository {
-    getBySameAsTitle(title) {
-        return this.query().select('title', 'value').where('title', 'like', `%${title}%`);
+    getBySameAsTitle(title, unAccentTitle) {
+        return this.query().select('title', 'value').where('title', 'like', `%${title}%`).orWhereRaw(`title_tsv @@ to_tsquery('${unAccentTitle.replaceAll(' ', ' | ')}')`);
     }
 
     getByTitle(title) {

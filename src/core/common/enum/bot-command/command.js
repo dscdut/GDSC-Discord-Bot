@@ -3,4 +3,5 @@ export const COMMAND_KEY = {
     GET: 'get',
     GIVE_AWAY: 'giveaway',
     HELP: 'help',
+    GET_ALL: 'get_all',
 };

@@ -16,4 +16,8 @@ export class BaseRepository {
             return this.query().insert(data).transacting(trx).returning(columns);
         } return this.query().insert(data).returning(columns);
     }
+
+    getAll(columns = '*') {
+        return this.query().select(columns);
+    }
 }
