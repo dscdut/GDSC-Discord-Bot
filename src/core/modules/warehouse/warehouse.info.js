@@ -15,5 +15,9 @@ export const WareHouseInfo = BaseModuleInfo
         {
             commandKey: COMMAND_PREFIX + COMMAND_KEY.GET,
             description: 'Get resources which are same as your input'
+        },
+        {
+            commandKey: COMMAND_PREFIX + COMMAND_KEY.GIVE_AWAY,
+            description: 'Schedule a give-away event'
         }
     ]);

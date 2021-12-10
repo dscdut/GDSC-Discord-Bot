@@ -4,35 +4,25 @@ function formatResponseText(content) {
     return `\`\`\`${content}\`\`\` `;
 }
 
-export function successResponse(message, data) {
-    const response = `[${BOT_RESPONSE_STATUS.SUCCESS}] | ${message}`;
-    if (data) {
-        return {
-            status: formatResponseText(response),
-            data
-        };
+export function successResponse(message, data, isToSnippetFormat = true) {
+    if (data && isToSnippetFormat) {
+        return formatResponseText(`[${BOT_RESPONSE_STATUS.SUCCESS}] | ${message}\n\n${data}`);
+    } else {
+        
     }
-    return { status: formatResponseText(response) };
+    return formatResponseText(`[${BOT_RESPONSE_STATUS.SUCCESS}] | ${message}`);
 }
 
 export function failResponse(message, data) {
-    const response = `[${BOT_RESPONSE_STATUS.FAIL}] | ${message}`;
     if (data) {
-        return {
-            status: formatResponseText(response),
-            data
-        };
+        return formatResponseText(`[${BOT_RESPONSE_STATUS.FAIL}] | ${message}\n ${data}`);
     }
-    return { status: formatResponseText(response) };
+    return formatResponseText(`[${BOT_RESPONSE_STATUS.FAIL}] | ${message}`);
 }
 
 export function errorResponse(message, data) {
-    const response = `[${BOT_RESPONSE_STATUS.ERROR}] | ${message}`;
     if (data) {
-        return {
-            status: formatResponseText(response),
-            data
-        };
+        return formatResponseText(`[${BOT_RESPONSE_STATUS.ERROR}] | ${message}\n ${data}`);
     }
-    return { status: formatResponseText(response) };
+    return formatResponseText(`[${BOT_RESPONSE_STATUS.ERROR}] | ${message}`);
 }

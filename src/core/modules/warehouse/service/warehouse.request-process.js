@@ -46,10 +46,11 @@ export class WarehouseRequestProcess {
         const indexOfTitleValueSeparator = this.content.indexOf(TITLE_VALUE_SEPARATOR);
         const valueFromContent = this.content.slice(indexOfTitleValueSeparator + TITLE_VALUE_SEPARATOR.length).trim();
 
-        if (WarehouseRequestProcess.checkIfUrl(valueFromContent)) {
-            const shortedUrl = await WarehouseRequestProcess.shortenUrl(valueFromContent);
-            this.value = `<${shortedUrl}>`;
-        } else this.value = valueFromContent;
+        // if (WarehouseRequestProcess.checkIfUrl(valueFromContent)) {
+        //     const shortedUrl = await WarehouseRequestProcess.shortenUrl(valueFromContent);
+        //     this.value = `<${shortedUrl}>`;
+        // } else
+        this.value = valueFromContent;
 
         return this;
     }

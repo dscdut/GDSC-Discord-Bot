@@ -1,4 +1,4 @@
-import { BOT_INTENTS } from 'core/common/enum/bot-config';
+import { BOT_INTENTS, BOT_PARTIALS } from 'core/common/enum/bot-config';
 import { BOT_EVENT } from 'core/common/enum/bot-event';
 import { Client } from 'discord.js';
 import { logger } from 'package/logger';
@@ -8,7 +8,19 @@ class DiscordConfig {
     client
 
     constructor() {
-        this.client = new Client({ intents: [BOT_INTENTS.GUILDS, BOT_INTENTS.GUILD_MESSAGES, BOT_INTENTS.DIRECT_MESSAGES] });
+        this.client = new Client({
+            intents: [
+                BOT_INTENTS.GUILDS,
+                BOT_INTENTS.GUILD_MESSAGES,
+                BOT_INTENTS.DIRECT_MESSAGES,
+                BOT_INTENTS.GUILD_MESSAGE_REACTIONS,
+            ],
+            partials: [
+                BOT_PARTIALS.CHANNEL,
+                BOT_PARTIALS.MESSAGE,
+                BOT_PARTIALS.REACTION,
+            ],
+        });
     }
 
     connectToDiscordBot() {
@@ -24,12 +36,7 @@ class DiscordConfig {
                 return;
             }
             const res = await new DiscordCommandServiceImpl().executeRequest(req);
-            if (res) {
-                if (res.MESSAGE_CREATE) req.reply(res.status);
-                if (res.data) {
-                    req.reply(res.data);
-                }
-            }
+            if (res) req.reply(res);
         });
         return this;
     }
