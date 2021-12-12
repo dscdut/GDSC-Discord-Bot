@@ -1,7 +1,7 @@
 import * as schedule from 'node-schedule';
+import { failResponse, successResponse } from 'package/handler/bot-response';
 
 class CronJobServiceImpl {
-
     client;
 
     message;
@@ -10,26 +10,25 @@ class CronJobServiceImpl {
 
     data;
 
-    constructor() { }
-
     async replyMessage(luckyUsers) {
-        this.message.reply(`Giveaway start`);
-        this.channel.send(`Guess who will be the luckiests?`);
-        if (luckyUsers.length == 0) {
-            this.message.reply(`There is actually 0 person reacted to your message!`);
+        this.message.reply(successResponse('Giveaway event start'));
+        this.channel.send(successResponse('Rolling', 'Guess who will be the luckiest?'));
+        if (luckyUsers.length === 0) {
+            this.message.reply(failResponse('Error', 'There is actually 0 person reacted to your message!'));
             return;
         }
         let currentIndex = 0;
         let timeCounter = 0;
         const timer = setInterval(() => {
-            if (timeCounter % 2 == 1) {
-                this.channel.send("⌛");
+            if (timeCounter % 2 === 1) {
+                this.channel.send('⌛');
             } else {
-                this.channel.send("⌛");
+                this.channel.send('⌛');
             }
             timeCounter += 1;
-            if (timeCounter == 3) {
-                this.message.reply(`Congrats: <@${luckyUsers[currentIndex++]}> winning the prize 🤩 🤩 🤩 !!!`);
+            if (timeCounter === 3) {
+                this.message.reply(`Congrats: <@${luckyUsers[currentIndex]}> winning the prize 🤩 🤩 🤩 !!!`);
+                currentIndex += 1;
                 timeCounter = 0;
             }
             if (currentIndex >= luckyUsers.length) {
@@ -41,17 +40,21 @@ class CronJobServiceImpl {
     async getListUserReacted(messageId, channelId) {
         this.channel = await this.client.channels.fetch(channelId);
         this.message = await this.channel.messages.fetch(messageId);
-        const reaction = await this.message.reactions.cache;
+        const reactions = await this.message.reactions.cache;
         const senderId = this.message.author.id;
-        let arr = [];
-        for (let [key, value] of reaction) {
-            const u = await value.users.fetch().then(listUsers => {
-                return listUsers.map((user) => user.id);
+        const usersReactionManager = [];
+        reactions.forEach(reactionBasedOnIcon => {
+            usersReactionManager.push(reactionBasedOnIcon.users.fetch());
+        });
+        const userFromReaction = await Promise.all(usersReactionManager);
+        let userReacted = [];
+        userFromReaction.forEach(element => {
+            element.forEach(user => {
+                userReacted.push(user.id);
             });
-            arr.push(...u);
-        }
-        arr = arr.filter(x => x != senderId);
-        return [...new Set(arr)];
+        });
+        userReacted = userReacted.filter(x => x !== senderId);
+        return [...new Set(userReacted)];
     }
 
     scheduleJob(channelId, messageId, data, client) {
@@ -67,41 +70,31 @@ class CronJobServiceImpl {
             month: time.month(),
         };
 
-        const job = schedule.scheduleJob(timeToExecute, function () {
-            runJob();
-        });
-
         const getResult = async () => {
             const users = await this.getListUserReacted(messageId, channelId);
             const luckyUsers = this.roll(users, this.data.quantity);
             await this.replyMessage(luckyUsers);
-        }
+        };
 
         const runJob = async () => {
             await getResult();
-            job.cancel();
-        }
+        };
+
+        schedule.scheduleJob(timeToExecute, () => {
+            runJob();
+        });
     }
 
-    getRandomIntInclusive(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    }
-    
     roll(users, quantity) {
         if (users.length <= quantity) {
             return users;
         }
-        const luckyUsers = [];
-        while (quantity > 0) {
-            let luckyIndex = this.getRandomIntInclusive(0, users.length - 1);
-            if (luckyUsers.indexOf(luckyIndex) >= 0) continue;
-            luckyUsers.push(luckyIndex);
-            quantity = quantity - 1;
-        }
-        return luckyUsers.map(idx => users[idx]);
+        const indexes = [...Array(users.length).keys()]
+            .sort(() => 0.5 - Math.random())
+            .slice(-1 * quantity);
+
+        return indexes.map(index => users[index]);
     }
 }
 
-export const ScheudleService = new CronJobServiceImpl();
+export const ScheduleService = new CronJobServiceImpl();
