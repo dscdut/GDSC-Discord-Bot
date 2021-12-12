@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+git pull
+
 DOCKER_IMAGE="ichhoa129/discord-bot"
 
 # Stop and remove the container

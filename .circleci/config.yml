@@ -62,12 +62,12 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "6c:b8:cf:8a:7c:85:52:ad:d9:1e:ec:cf:a9:10:1b:53"
+            - "0c:25:38:5e:0b:3a:6e:cd:9e:75:7c:df:4e:b3:de:56"
       - run: 
           name: Deploy via ssh
           command: |
               echo Starting to deploy server
-              ssh -oStrictHostKeyChecking=no -v $SSH_USER@$SSH_HOST './GDSC-Discord-Bot/script/deploy.sh'
+              ssh -v $SSH_USER@$SSH_HOST 'cd GDSC-Discord-Bot && ./script/deploy.sh'
 
 workflows:
   version: 2
