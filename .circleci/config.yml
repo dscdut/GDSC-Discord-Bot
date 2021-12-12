@@ -49,26 +49,6 @@ jobs:
           paths:
             - ./node_modules
       - run: npm run lint
-      - run: 
-          name: Build Success
-          when: on_success
-          command:
-            docker --version
-
-            docker login -u=$DOCKER_LOGIN -p=$DOCKER_PASSWORD
-
-            docker build -t $DOCKER_IMAGE:$DOCKER_TAG --build-arg MACHINE_NAME=$DOCKER_IMAGE-$DOCKER_TAG .
-
-            docker push $DOCKER_IMAGE:$DOCKER_TAG
-
-            echo "Docker built successfully!! for $DOCKER_IMAGE $DOCKER_TAG"
-      - run:
-            name: Build Failure
-            when: on_fail
-            command: |
-              echo "ERROR building $DOCKER_IMAGE $DOCKER_TAG"
-
-
  
   test_lint:
     <<: *lint-template

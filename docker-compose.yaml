@@ -1,6 +1,0 @@
-version: '3.3'
-services:
-  discord-bot:
-    image: ichhoa129/discord-bot:latest
-    ports:
-      - "8088:8080"
