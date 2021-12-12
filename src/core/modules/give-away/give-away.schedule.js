@@ -1,4 +1,5 @@
 import * as schedule from 'node-schedule';
+import { DEFAULT_TIMEZONE } from 'core/common/constant';
 import { failResponse, successResponse } from 'package/handler/bot-response';
 
 class CronJobServiceImpl {
@@ -68,6 +69,7 @@ class CronJobServiceImpl {
             hour: time.hour(),
             date: time.date(),
             month: time.month(),
+            tz: DEFAULT_TIMEZONE,
         };
 
         const getResult = async () => {

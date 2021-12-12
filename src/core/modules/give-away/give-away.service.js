@@ -11,7 +11,8 @@ class GiveAwayServiceImpl {
             return failResponse('Failed', 'Invalid command! Time cannot be set to the past & Quantity must be a positive number');
         }
         ScheduleService.scheduleJob(channelId, messageId, data, DiscordService.client);
-        return successResponse('Successfully setup give-away event', `[${data.message} - Time to roll: ${data.date.toLocaleString()}]`);
+        return successResponse('Successfully setup give-away event',
+            `[${data.message} - Time to roll: ${data.date.date()}/${data.date.month()}/${data.date.year()} - ${data.date.hour()}:${data.date.minute()}:00}]`);
     }
 }
 
