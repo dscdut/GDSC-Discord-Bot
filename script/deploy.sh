@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-git pull
-
 DOCKER_IMAGE="ichhoa129/discord-bot"
+
+git pull
 
 # Stop and remove the container
 docker kill $(docker ps -q)
