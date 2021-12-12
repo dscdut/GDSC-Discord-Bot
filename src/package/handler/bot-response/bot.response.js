@@ -6,7 +6,7 @@ function formatResponseText(content) {
 
 export function successResponse(message, data) {
     if (data) {
-        return formatResponseText(`[${BOT_RESPONSE_STATUS.SUCCESS}] | ${message}\n  ${data}`);
+        return formatResponseText(`[${BOT_RESPONSE_STATUS.SUCCESS}] | ${message}\n\n${data}`);
     }
     return formatResponseText(`[${BOT_RESPONSE_STATUS.SUCCESS}] | ${message}`);
 }

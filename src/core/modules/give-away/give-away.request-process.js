@@ -17,22 +17,22 @@ export class GiveAwayRequestProcess {
             return null;
         }
         return {
-            'date': dateFormatted,
-            'quantity': quantity,
-            'message': message,
-        }
+            date: dateFormatted,
+            quantity,
+            message,
+        };
     }
 
     formatDate(date) {
         let dateDetail = date.split(' ');
-        if (dateDetail.length == 1) {
+        if (dateDetail.length === 1) {
             dateDetail = [DEFAULT_SCHEDULE_TIME, ...dateDetail];
         }
         return dateDetail;
     }
 
     validateQuantity(quantity) {
-        const number = parseInt(quantity);
+        const number = parseInt(quantity, 10);
         if (Number.isNaN(number)) return false;
         return number > 0;
     }

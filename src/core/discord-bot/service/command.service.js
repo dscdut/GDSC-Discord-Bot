@@ -27,16 +27,16 @@ export class DiscordCommandServiceImpl {
             }
             case COMMAND_PREFIX + COMMAND_KEY.GIVE_AWAY: {
                 return GiveAwayService.addGiveAway(
-                    req.content.replace(commandKey + ':', '').trim(), 
-                    req.id, 
-                    req.channelId, 
+                    req.content.replace(`${commandKey}:`, '').trim(),
+                    req.id,
+                    req.channelId,
                     DiscordService.client
                 );
             }
         }
     }
 
-    #getCommandKey = (message) => {
+    #getCommandKey = message => {
         if (message.indexOf(' ') !== -1) {
             message = message.slice(0, message.indexOf(' '));
         }

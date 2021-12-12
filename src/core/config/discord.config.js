@@ -8,7 +8,7 @@ class DiscordConfig {
     client
 
     constructor() {
-        this.client = new Client({ 
+        this.client = new Client({
             intents: [
                 BOT_INTENTS.GUILDS,
                 BOT_INTENTS.GUILD_MESSAGES,

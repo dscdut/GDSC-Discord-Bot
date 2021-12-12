@@ -9,7 +9,7 @@ class GiveAwayServiceImpl {
 
     async addGiveAway(content, messageId, channelId) {
         const giveAwayCommandProcess = new GiveAwayRequestProcess(content);
-        const data = giveAwayCommandProcess.seperateData();
+        const data = giveAwayCommandProcess.separateData();
         if (!data) {
             return failResponse('Failed', 'Invalid command! Time cannot be set to the past & Quantity must be a positive number');
         }

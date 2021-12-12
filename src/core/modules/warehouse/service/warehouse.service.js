@@ -54,7 +54,7 @@ class WarehouseServiceImpl {
         let stringResponse = '';
 
         for (let i = 0; i <= slides.length - 1; i += 1) {
-            stringResponse = stringResponse.concat(`\n ${i >= 0 < 10 ? `0${i + 1}` : i + 1}. `, `${slides[i].title}:  ${slides[i].value}`);
+            stringResponse = stringResponse.concat(`  ${i >= 0 < 10 ? `0${i + 1}` : i + 1}. `, `${slides[i].title}:  ${slides[i].value}\n`);
         }
         return stringResponse;
     }
