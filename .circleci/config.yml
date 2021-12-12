@@ -57,16 +57,16 @@ jobs:
 
             docker login -u=$DOCKER_LOGIN -p=$DOCKER_PASSWORD
 
-            docker build -t ichhoa129/discord-bot:$CIRCLE_BRANCH --build-arg MACHINE_NAME=discord-bot-$CIRCLE_BRANCH .
+            docker build -t $DOCKER_IMAGE:$DOCKER_TAG --build-arg MACHINE_NAME=$DOCKER_IMAGE-$DOCKER_TAG .
 
-            docker push ichhoa129/discord-bot:$CIRCLE_BRANCH
+            docker push $DOCKER_IMAGE:$DOCKER_TAG
 
-            echo "Docker built successfully!! for discord-bot $CIRCLE_BRANCH"
+            echo "Docker built successfully!! for $DOCKER_IMAGE $DOCKER_TAG"
       - run:
             name: Build Failure
             when: on_fail
             command: |
-              echo "ERROR building discord-bot $CIRCLE_BRANCH"
+              echo "ERROR building $DOCKER_IMAGE $DOCKER_TAG"
 
 
  
@@ -80,11 +80,15 @@ jobs:
       enabled: true
     working_directory: ~/GDSC-Discord-Bot
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "18:b0:a9:85:49:83:c0:b5:14:06:45:df:1b:e8:bc:83"
       - run: 
           name: Deploy via ssh
           command: |
               echo Starting to deploy server
-              ssh $SSH_USER@$SSH_HOST "cd ./GDSC-Discord-Bot; echo Starting to deploy; git pull origin dev; npm install; pm2 restart discord"
+              chmod
+              ssh -oStrictHostKeyChecking=no $SSH_USER@$SSH_HOST './GDSC-Discord-Bot/script/deploy.sh'
 
 workflows:
   version: 2
@@ -100,4 +104,6 @@ workflows:
             - test_lint
           filters:
             branches:
-              only: dev
+              only:
+                - dev
+                - circleci-project-setup
