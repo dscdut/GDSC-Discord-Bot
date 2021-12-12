@@ -87,7 +87,6 @@ jobs:
           name: Deploy via ssh
           command: |
               echo Starting to deploy server
-              chmod
               ssh -oStrictHostKeyChecking=no $SSH_USER@$SSH_HOST './GDSC-Discord-Bot/script/deploy.sh'
 
 workflows:
