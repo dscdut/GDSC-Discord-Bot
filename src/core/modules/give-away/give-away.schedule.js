@@ -1,5 +1,6 @@
 /* eslint-disable no-continue */
 import * as schedule from 'node-schedule';
+import { DEFAULT_TIMEZONE } from 'core/common/constant';
 
 class CronJobServiceImpl {
     client;
@@ -27,7 +28,8 @@ class CronJobServiceImpl {
             }
             timeCounter += 1;
             if (timeCounter === 3) {
-                this.message.reply(`Congrats: <@${luckyUsers[currentIndex += 1]}> winning the prize 🤩 🤩 🤩 !!!`);
+                this.message.reply(`Congrats: <@${luckyUsers[currentIndex]}> winning the prize 🤩 🤩 🤩 !!!`);
+                currentIndex += 1;
                 timeCounter = 0;
             }
             if (currentIndex >= luckyUsers.length) {
@@ -39,15 +41,19 @@ class CronJobServiceImpl {
     async getListUserReacted(messageId, channelId) {
         this.channel = await this.client.channels.fetch(channelId);
         this.message = await this.channel.messages.fetch(messageId);
-        const reaction = await this.message.reactions.cache;
-        const senderId = this.message.author.id;
-        let arr = [];
-        for (const [key, value] of reaction) {
-            const u = await value.users.fetch().then(listUsers => listUsers.map(user => user.id));
-            arr.push(...u);
-        }
-        arr = arr.filter(x => x !== senderId);
-        return [...new Set(arr)];
+        const reactions = await this.message.reactions.cache;
+        const usersReactionManager = [];
+        reactions.forEach(reactionBasedOnIcon => {
+            usersReactionManager.push(reactionBasedOnIcon.users.fetch());
+        });
+        const userFromReaction = await Promise.all(usersReactionManager);
+        const userReacted = [];
+        userFromReaction.forEach(element => {
+            element.forEach(user => {
+                userReacted.push(user.id);
+            });
+        });
+        return [...new Set(userReacted)];
     }
 
     scheduleJob(channelId, messageId, data, client) {
@@ -61,6 +67,7 @@ class CronJobServiceImpl {
             hour: time.hour(),
             date: time.date(),
             month: time.month(),
+            tz: DEFAULT_TIMEZONE,
         };
 
         const getResult = async () => {
@@ -69,34 +76,24 @@ class CronJobServiceImpl {
             await this.replyMessage(luckyUsers);
         };
 
-        const job = schedule.scheduleJob(timeToExecute, () => {
-            runJob();
-        });
-
         const runJob = async () => {
             await getResult();
-            job.cancel();
         };
-    }
 
-    getRandomIntInclusive(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1) + min);
+        schedule.scheduleJob(timeToExecute, () => {
+            runJob();
+        });
     }
 
     roll(users, quantity) {
         if (users.length <= quantity) {
             return users;
         }
-        const luckyUsers = [];
-        while (quantity > 0) {
-            const luckyIndex = this.getRandomIntInclusive(0, users.length - 1);
-            if (luckyUsers.indexOf(luckyIndex) >= 0) continue;
-            luckyUsers.push(luckyIndex);
-            quantity -= 1;
-        }
-        return luckyUsers.map(idx => users[idx]);
+        const indexes = [...Array(users.length).keys()]
+            .sort(() => 0.5 - Math.random())
+            .slice(-1 * quantity);
+
+        return indexes.map(index => users[index]);
     }
 }
 

@@ -1,0 +1,84 @@
+version: 2.1
+aliases:
+  - &restore-cache
+    restore_cache:
+        keys:
+        - v1-dependencies-
+        # fallback to using the latest cache if no exact match is found
+        - v1-dependencies-
+  - &install-deps
+    run:
+        name: Install dependencies
+        command: npm i
+  - &run-lint
+    run:
+        name: Lint
+        command: npm run lint
+
+lint-template: &lint-template
+  working_directory: ~/GDSC-Discord-Bot
+  steps:
+    - checkout
+    - *restore-cache
+    - *install-deps
+    - *run-lint
+
+orbs:
+  node: circleci/node@3.0.0
+
+jobs:
+  build:
+    environment:
+      DOCKER_IMAGE: ichhoa129/discord-bot
+      DOCKER_TAG: latest
+    working_directory: ~/GDSC-Discord-Bot
+    docker:
+      - image: circleci/node:16
+      - image: docker:17.09.1-ce-git  
+    steps:
+      - checkout
+      - setup_remote_docker
+      - *restore-cache
+      - run: npm cache clear --force
+      - run:
+          name: Update NPM version
+          command: 'sudo npm install -g npm@latest'
+      - *install-deps
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run: npm run lint
+ 
+  test_lint:
+    <<: *lint-template
+    docker:
+      - image: circleci/node:16
+
+  deploy:
+    machine:
+      enabled: true
+    working_directory: ~/GDSC-Discord-Bot
+    steps:
+      - run: 
+          name: Deploy via ssh
+          command: |
+              echo Starting to deploy server
+              ssh -v $SSH_USER@$SSH_HOST 'cd GDSC-Discord-Bot && ./script/deploy.sh'
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build
+      - test_lint:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - build
+            - test_lint
+          filters:
+            branches:
+              only:
+                - dev
