@@ -36,7 +36,7 @@ class DiscordConfig {
                 return;
             }
             const res = await new DiscordCommandServiceImpl().executeRequest(req);
-            if (res) req.reply(res);
+            if (res) req.channel.send(res);
         });
         return this;
     }

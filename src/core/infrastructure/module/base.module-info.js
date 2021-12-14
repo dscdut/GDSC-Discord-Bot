@@ -39,7 +39,7 @@ export class BaseModuleInfo {
         logger.info(`Collecting info of module: ${this.#moduleInformation.name}`);
         commandsInfo.forEach(commandInfo => {
             const {
-                description, commandKey
+                description, commandKey, format
             } = commandInfo;
 
             if (!commandKey) {
@@ -47,9 +47,9 @@ export class BaseModuleInfo {
             }
 
             if (description) {
-                this.#commandDescription.push({ commandKey, description });
+                this.#commandDescription.push({ commandKey, description, format });
             } else {
-                this.#commandDescription.push({ commandKey, description: 'No description for this command' });
+                this.#commandDescription.push({ commandKey, description: 'No description for this command', format });
             }
         });
         return this;

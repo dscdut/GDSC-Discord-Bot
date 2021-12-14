@@ -1,6 +1,7 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable prefer-destructuring */
 import { TITLE_VALUE_SEPARATOR } from 'core/common/constant';
+// import { isUrl } from 'core/utils';
 import fetch from 'node-fetch';
 import { ConfigService } from 'package/config';
 import { logger } from 'package/logger';
@@ -29,12 +30,12 @@ export class WarehouseRequestProcess {
         return ConfigService.getSingleton().get('SHORTEN_TOOL_URL') + shortenToolRes.data;
     }
 
-    static checkIfUrl(value) {
-        // eslint-disable-next-line no-useless-escape
-        const urlExpression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
-        const regex = new RegExp(urlExpression);
-        return regex.test(value);
-    }
+    // static checkIfUrl(value) {
+    //     // eslint-disable-next-line no-useless-escape
+    //     const urlExpression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
+    //     const regex = new RegExp(urlExpression);
+    //     return regex.test(value);
+    // }
 
     getTitle() {
         const indexOfTitleValueSeparator = this.content.indexOf(TITLE_VALUE_SEPARATOR);
@@ -46,7 +47,7 @@ export class WarehouseRequestProcess {
         const indexOfTitleValueSeparator = this.content.indexOf(TITLE_VALUE_SEPARATOR);
         const valueFromContent = this.content.slice(indexOfTitleValueSeparator + TITLE_VALUE_SEPARATOR.length).trim();
 
-        // if (WarehouseRequestProcess.checkIfUrl(valueFromContent)) {
+        // if (isUrl(valueFromContent)) {
         //     const shortedUrl = await WarehouseRequestProcess.shortenUrl(valueFromContent);
         //     this.value = `<${shortedUrl}>`;
         // } else

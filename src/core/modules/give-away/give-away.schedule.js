@@ -12,7 +12,7 @@ class CronJobServiceImpl {
 
     async replyMessage(luckyUsers) {
         this.message.reply('Giveaway start');
-        this.channel.send('Guess who will be the luckiests?');
+        this.channel.send('Guess who will be the luckiest?');
         if (luckyUsers.length === 0) {
             this.message.reply('There is actually 0 person reacted to your message!');
             return;

@@ -6,7 +6,7 @@ export class GiveAwayRequestProcess {
         this.content = content;
     }
 
-    seperateData() {
+    separateData() {
         const commandInfo = this.content.split(TITLE_VALUE_SEPARATOR).map(e => e.trim());
         if (commandInfo.length < 3) return null;
         const quantity = commandInfo[0];
