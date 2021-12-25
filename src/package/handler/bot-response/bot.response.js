@@ -1,7 +1,11 @@
 import { BOT_RESPONSE_STATUS } from './enum/bot.response.enum';
 
-function formatResponseText(content) {
+export function formatResponseText(content) {
     return `\`\`\`${content}\`\`\` `;
+}
+
+export function formatResponseBoldText(content) {
+    return `**${content}**`;
 }
 
 export function successResponse(message, data) {

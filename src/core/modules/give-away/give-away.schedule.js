@@ -1,6 +1,6 @@
 import * as schedule from 'node-schedule';
 import { DEFAULT_TIMEZONE } from 'core/common/constant';
-import { failResponse, successResponse } from 'package/handler/bot-response';
+import { failResponse, formatResponseBoldText } from 'package/handler/bot-response';
 
 class CronJobServiceImpl {
     client;
@@ -12,30 +12,41 @@ class CronJobServiceImpl {
     data;
 
     async replyMessage(luckyUsers) {
-        this.message.reply(successResponse('Giveaway event start'));
-        this.channel.send(successResponse('Rolling', 'Guess who will be the luckiest?'));
         if (luckyUsers.length === 0) {
-            this.message.reply(failResponse('Error', 'There is actually 0 person reacted to your message!'));
+            this.message.reply(failResponse('Error', 'There\'s nobody reacted to your message!'));
             return;
         }
         let currentIndex = 0;
         let timeCounter = 0;
-        const timer = setInterval(() => {
+        const waitingMessage = await this.message.reply('⌛');
+        let awardMessage;
+        const timer = setInterval(async () => {
+            if (timeCounter === 0 && currentIndex !== 0) {
+                waitingMessage.edit('⌛');
+            }
+            const currentContent = waitingMessage.content;
             if (timeCounter % 2 === 1) {
-                this.channel.send('⌛');
-            } else {
-                this.channel.send('⌛');
+                waitingMessage.edit(`${currentContent}⏳`);
+            } else if (timeCounter % 2 === 0 && timeCounter !== 0) {
+                waitingMessage.edit(`${currentContent}⌛`);
             }
             timeCounter += 1;
-            if (timeCounter === 3) {
-                this.message.reply(`Congrats: <@${luckyUsers[currentIndex]}> winning the prize 🤩 🤩 🤩 !!!`);
+            if (timeCounter === 4) {
+                const replyMsg = `Chúc mừng <@${luckyUsers[currentIndex]}> 🎁🎁🎁`;
+                if (!awardMessage) {
+                    awardMessage = await this.message.reply(formatResponseBoldText(replyMsg));
+                } else {
+                    const currentAwardMessage = awardMessage.content.replace(/\*\*/g, '');
+                    awardMessage.edit(formatResponseBoldText(`${currentAwardMessage}\n\n${replyMsg}`));
+                }
                 currentIndex += 1;
                 timeCounter = 0;
             }
             if (currentIndex >= luckyUsers.length) {
+                setTimeout(() => waitingMessage.delete(), 1000);
                 clearInterval(timer);
             }
-        }, 1500);
+        }, 2000);
     }
 
     async getListUserReacted(messageId, channelId) {
