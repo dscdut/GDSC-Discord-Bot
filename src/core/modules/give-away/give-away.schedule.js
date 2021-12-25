@@ -42,19 +42,17 @@ class CronJobServiceImpl {
         this.channel = await this.client.channels.fetch(channelId);
         this.message = await this.channel.messages.fetch(messageId);
         const reactions = await this.message.reactions.cache;
-        const senderId = this.message.author.id;
         const usersReactionManager = [];
         reactions.forEach(reactionBasedOnIcon => {
             usersReactionManager.push(reactionBasedOnIcon.users.fetch());
         });
         const userFromReaction = await Promise.all(usersReactionManager);
-        let userReacted = [];
+        const userReacted = [];
         userFromReaction.forEach(element => {
             element.forEach(user => {
                 userReacted.push(user.id);
             });
         });
-        userReacted = userReacted.filter(x => x !== senderId);
         return [...new Set(userReacted)];
     }
 
