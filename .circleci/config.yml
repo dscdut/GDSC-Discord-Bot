@@ -60,6 +60,9 @@ jobs:
       enabled: true
     working_directory: ~/GDSC-Discord-Bot
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "ef:40:32:05:54:5c:04:a0:88:ba:42:37:09:2a:9b:b7"
       - run: 
           name: Deploy via ssh
           command: |
