@@ -1,7 +1,8 @@
 import { COMMAND_PREFIX } from 'core/common/constant';
 import { COMMAND_KEY } from 'core/common/enum/bot-command';
-import { unAccentVietnamese } from 'core/utils';
-import { errorResponse, failResponse, successResponse } from 'package/handler/bot-response';
+import {
+    isUrl, toCodeFormat, toSnippetFormat, unAccentVietnamese
+} from 'core/utils';
 import { logger } from 'package/logger';
 import { checkIfValidCommand } from '../warehouse.middleware';
 import { WarehouseRepository } from '../warehouse.repository';
@@ -20,41 +21,42 @@ class WarehouseServiceImpl {
                 .then(val => val.getDataFromContent());
 
             if (await this.#checkIfExisted(mapToModel.title)) {
-                return failResponse('Title already existed! please choose another one');
+                return toSnippetFormat('Title already existed! please choose another one');
             }
             try {
                 const insertedData = await this.warehouseRepository.insert(mapToModel, 'title');
-                return successResponse(`Successfully added: "${insertedData[0]}"`);
+                return toSnippetFormat(`Successfully added: "${insertedData[0]}"`);
             } catch (error) {
                 logger.error(`Error with adding record: ${error.detail}`);
-                return failResponse(error.detail);
+                return toSnippetFormat(error.detail);
             }
-        } else return errorResponse('Invalid command format');
+        } else return toSnippetFormat('Invalid command format');
     }
 
     async getBySameAsTitle(title) {
         const unAccentTitle = unAccentVietnamese(title);
         const responses = await this.warehouseRepository.getBySameAsTitle(title, unAccentTitle);
         if (responses.length <= 0) {
-            return failResponse(`No record was found with title: "${title}"". \n\nMy searching skill is still not perfect, please check again your typo or try the "get all" command to satisfy you demand with: "${COMMAND_PREFIX + COMMAND_KEY.GET_ALL}"`);
+            return `No record was found with title: "${toCodeFormat(title)}". \nMy searching skill is still not perfect, please check again your typo or try to retrieve all data with: "${toCodeFormat(COMMAND_PREFIX + COMMAND_KEY.GET_ALL)}"`;
         }
-        return successResponse('Here are what I found:', this.#toBotRespondFormat(responses));
+        return (`Here are what I found: \n${this.#toBotRespondFormat(responses)}`);
     }
 
     async getAll() {
         const responses = await this.warehouseRepository.getAll(['title', 'value']);
 
         if (responses.length <= 0) {
-            return failResponse('No record was found');
+            return toSnippetFormat('No record was found');
         }
-        return successResponse('Here are what I found:', this.#toBotRespondFormat(responses));
+        return (`Here are what I found: \n${this.#toBotRespondFormat(responses)}`);
     }
 
-    #toBotRespondFormat(slides) {
+    #toBotRespondFormat(responses) {
         let stringResponse = '';
 
-        for (let i = 0; i <= slides.length - 1; i += 1) {
-            stringResponse = stringResponse.concat(`  ${i >= 0 < 10 ? `0${i + 1}` : i + 1}. `, `${slides[i].title}:  ${slides[i].value}\n`);
+        for (let i = 0; i <= responses.length - 1; i += 1) {
+            stringResponse = stringResponse.concat(`> ${i >= 0 && i < 9 ? `0${i + 1}` : i + 1}. `,
+                `${responses[i].title}: ${isUrl(responses[i].value) ? `<${responses[i].value}>` : `${responses[i].value}`}\n`);
         }
         return stringResponse;
     }

@@ -10,6 +10,7 @@ export const GiveAwayInfo = BaseModuleInfo
     .registerInfo([
         {
             commandKey: COMMAND_PREFIX + COMMAND_KEY.GIVE_AWAY,
-            description: 'Schedule a give-away event'
-        },
+            description: 'Setting up a give-away event',
+            format: `${COMMAND_PREFIX + COMMAND_KEY.GIVE_AWAY}: [QUANTITY] >> [DATE TIME] >> [MESSAGE]`
+        }
     ]);

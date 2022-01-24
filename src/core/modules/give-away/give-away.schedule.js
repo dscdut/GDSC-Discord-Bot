@@ -1,6 +1,6 @@
+/* eslint-disable no-continue */
 import * as schedule from 'node-schedule';
 import { DEFAULT_TIMEZONE } from 'core/common/constant';
-import { failResponse, successResponse } from 'package/handler/bot-response';
 
 class CronJobServiceImpl {
     client;
@@ -12,10 +12,10 @@ class CronJobServiceImpl {
     data;
 
     async replyMessage(luckyUsers) {
-        this.message.reply(successResponse('Giveaway event start'));
-        this.channel.send(successResponse('Rolling', 'Guess who will be the luckiest?'));
+        this.message.reply('Giveaway start');
+        this.channel.send('Guess who will be the luckiest?');
         if (luckyUsers.length === 0) {
-            this.message.reply(failResponse('Error', 'There is actually 0 person reacted to your message!'));
+            this.message.reply('There is actually 0 person reacted to your message!');
             return;
         }
         let currentIndex = 0;

@@ -31,6 +31,7 @@
         "node-fetch": "2",
         "node-schedule": "^2.0.0",
         "pg": "^8.7.1",
+        "slugify": "^1.6.3",
         "winston": "^3.3.3"
     },
     "devDependencies": {

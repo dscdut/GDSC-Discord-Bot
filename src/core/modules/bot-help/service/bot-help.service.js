@@ -1,17 +1,18 @@
+import { DISCORD_EMOJI } from 'core/common/constant/discord-emoji.constant';
 import { allModulesInfo } from 'core/modules';
-import { successResponse } from 'package/handler/bot-response';
+import { toBold, toCodeFormat } from 'core/utils';
 
 class BotHelpServiceImpl {
     help() {
-        return successResponse('Here am I:', this.#convertTooString(allModulesInfo.getAllModulesInfo()));
+        return `Here am I:\n${this.#convertToResponseFormat(allModulesInfo.getAllModulesInfo())}`;
     }
 
     /**
      *
      * @param {array} modulesInfo
      */
-    #convertTooString(modulesInfo) {
-        return modulesInfo.reduce((prev, curr) => prev.concat(`  Command: ${curr.commandKey} ---> ${curr.description} \n`), '');
+    #convertToResponseFormat(modulesInfo) {
+        return modulesInfo.reduce((prev, curr) => prev.concat(`> ${toBold(curr.description)}:\n> ${DISCORD_EMOJI.POINT_RIGHT}${toCodeFormat(curr.format)}\n`), '');
     }
 }
 

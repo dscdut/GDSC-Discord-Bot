@@ -10,10 +10,17 @@ export const WareHouseInfo = BaseModuleInfo
     .registerInfo([
         {
             commandKey: COMMAND_PREFIX + COMMAND_KEY.ADD,
-            description: 'Add a resource from your input'
+            description: 'Save your note as keyword',
+            format: `${COMMAND_PREFIX + COMMAND_KEY.ADD} [KEYWORD] >> [VALUE]`
         },
         {
             commandKey: COMMAND_PREFIX + COMMAND_KEY.GET,
-            description: 'Get resources which are same as your input'
+            description: 'Get your note by keyword',
+            format: `${COMMAND_PREFIX + COMMAND_KEY.GET} [KEYWORD]`
         },
+        {
+            commandKey: COMMAND_PREFIX + COMMAND_KEY.GET_ALL,
+            description: 'Retrieve all your notes',
+            format: `${COMMAND_PREFIX + COMMAND_KEY.GET_ALL}`
+        }
     ]);

@@ -4,4 +4,6 @@ import { GiveAwayInfo } from './give-away';
 
 export const allModulesInfo = ModulesInfoHandler
     .builder()
-    .collectAllModulesInfo([WareHouseInfo, GiveAwayInfo]);
+    .collectAllModulesInfo([
+        WareHouseInfo, GiveAwayInfo
+    ]);
