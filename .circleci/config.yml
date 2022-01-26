@@ -67,7 +67,7 @@ jobs:
           name: Deploy via ssh
           command: |
               echo Starting to deploy server
-              ssh -v $SSH_USER@$SSH_HOST 'cd GDSC-Discord-Bot && git checkout dev && git pull && chmod 777 ./scripts/deploy.sh && ./script/deploy.sh'
+              ssh -v $SSH_USER@$SSH_HOST 'cd GDSC-Discord-Bot && git checkout dev && git pull && chmod 777 ./script/deploy.sh && ./script/deploy.sh'
 
 workflows:
   version: 2
