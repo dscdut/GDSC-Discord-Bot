@@ -2,8 +2,6 @@
 
 DOCKER_IMAGE="ichhoa129/discord-bot"
 
-git pull
-
 # Stop and remove the container
 docker kill gdsc_discord
 docker rm gdsc_discord
