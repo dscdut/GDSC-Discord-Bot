@@ -28,7 +28,7 @@ class CronJobServiceImpl {
             }
             timeCounter += 1;
             if (timeCounter === 3) {
-                this.message.reply(`Congrats: <@${luckyUsers[currentIndex]}> winning the prize 🤩 🤩 🤩 !!!`);
+                this.message.reply(`Congrats: <@${luckyUsers[currentIndex].id}>: ${luckyUsers[currentIndex].giftName} 🥲 !`);
                 currentIndex += 1;
                 timeCounter = 0;
             }
@@ -72,7 +72,7 @@ class CronJobServiceImpl {
 
         const getResult = async () => {
             const users = await this.getListUserReacted(messageId, channelId);
-            const luckyUsers = this.roll(users, this.data.quantity);
+            const luckyUsers = this.roll(users, this.data.items, this.data.quantity);
             await this.replyMessage(luckyUsers);
         };
 
@@ -85,15 +85,35 @@ class CronJobServiceImpl {
         });
     }
 
-    roll(users, quantity) {
-        if (users.length <= quantity) {
-            return users;
-        }
+    roll(users, items, quantity) {
+        const gifts = [];
+        Object.keys(items).forEach(key => {
+            gifts.push(...new Array(items[key]).fill(key));
+        });
+        gifts.sort(() => 0.5 - Math.random());
+
         const indexes = [...Array(users.length).keys()]
             .sort(() => 0.5 - Math.random())
             .slice(-1 * quantity);
 
-        return indexes.map(index => users[index]);
+        const userIds = indexes.map(index => users[index]);
+        const result = [];
+        if (gifts.length < users.length) {
+            gifts.forEach((giftName, index) => {
+                result.push({
+                    id: userIds[index],
+                    giftName,
+                });
+            });
+            return result;
+        }
+        users.forEach((id, index) => {
+            result.push({
+                id,
+                giftName: gifts[index],
+            });
+        });
+        return result;
     }
 }
 
