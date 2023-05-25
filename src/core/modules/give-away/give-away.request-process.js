@@ -1,9 +1,12 @@
+import moment from 'moment';
+import 'moment-timezone';
+
 import {
     TITLE_VALUE_SEPARATOR,
     DATE_FORMAT,
+    GMT7_TIMEZONE,
     DEFAULT_SCHEDULE_TIME
 } from 'core/common/constant';
-import moment from 'moment';
 
 export class GiveAwayRequestProcess {
     constructor(content) {
@@ -34,18 +37,28 @@ export class GiveAwayRequestProcess {
     }
 
     getDateFromCommand(date) {
-        let dateDetail = date.split(' ');
-        if (dateDetail.length === 1) {
-            dateDetail = [DEFAULT_SCHEDULE_TIME, ...dateDetail];
-        }
-        const formatedDate = moment(dateDetail, DATE_FORMAT);
-        if (
-            !formatedDate.isValid()
-            || (formatedDate - moment(new Date()) < 0)
-        ) {
+        try {
+            let dateDetail = date.split(' ');
+
+            if (dateDetail.length === 1) {
+                dateDetail = [DEFAULT_SCHEDULE_TIME, ...dateDetail];
+            }
+            const formatedDate = moment(dateDetail, DATE_FORMAT)
+                .tz(GMT7_TIMEZONE, true);
+
+            const now = moment().tz(GMT7_TIMEZONE);
+
+            if (
+                !formatedDate.isValid()
+                || (formatedDate.isBefore(now))
+            ) {
+                return null;
+            }
+
+            return formatedDate;
+        } catch (error) {
             return null;
         }
-        return formatedDate;
     }
 
     getDetailQuantity(msg) {
